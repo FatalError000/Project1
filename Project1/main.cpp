@@ -29,15 +29,14 @@ string encrypt_caesar(string inputString, int encryptValue)
 
 	for (int i = 0; i < inputString.length(); i++)
 	{
-		if ((inputString[i] != ' ') || ((inputString[i] >= 'a') && (inputString[i] <= 'z')) 
-		                            || ((inputString[i] >= 'A') && (inputString[i] <= 'Z')))
+		if (((inputString[i] >= 'a') && (inputString[i] <= 'z')) ||
+		    ((inputString[i] >= 'A') && (inputString[i] <= 'Z')))
 		{
 			if (((int)inputString[i] >= 65) && ((int)inputString[i] <= 90))
 			{				
 				result += (char)tempIndexCreate(65, 90, (int)inputString[i], encryptValue);
 			}
-
-			if (((int)inputString[i] >= 97) && ((int)inputString[i] <= 122))
+			else if (((int)inputString[i] >= 97) && ((int)inputString[i] <= 122))
 			{
 				result += (char)tempIndexCreate(97, 122, (int)inputString[i], encryptValue);
 			}
@@ -56,35 +55,39 @@ string decrypt_caesar(string inputString, int encryptValue)
 	return encrypt_caesar(inputString, -1 * encryptValue);
 }
 
+int easyEncryptValue(int encryptValue)
+{
+	int result = encryptValue;
+
+	while (result > 26)
+	{
+		result -= 26;
+	}
+
+	return result;
+}
+
 int main()
 {
-	string inputString;
-	int encryptValue, choice;
+	string inputString, outputString;
+	int encryptValue;
 
 	cout << "Enter your text" << endl;
 	getline(cin, inputString);
 
-	cout << "Enter the offset size for DECRYPT." << endl;
-	cin >> encryptValue;
-
-	
 	do
 	{
-		cout << "Dou you want to encrypt text? (Press 1)\nOr you want to decrypt text? (Press 2)" << endl;
-		cin >> choice;
-	} while((choice < 1) || (choice > 2));
+		cout << "Enter the offset size for ENCRYPT." << endl;
+		cin >> encryptValue;
+	} while (encryptValue < 0);
 
-	switch (choice)
-	{
-		case 1 : {
-					cout << endl << "Your encrypted text" << endl << encrypt_caesar(inputString, encryptValue) << endl; 
-					break;
-				 }
-		case 2 : {
-					cout << endl << "Your decrypted text" << endl << decrypt_caesar(inputString, encryptValue) << endl; 
-					break;
-				 }
-	}
+	encryptValue = easyEncryptValue(encryptValue);
+
+	outputString = encrypt_caesar(inputString, encryptValue);
+
+	cout << endl << "Your encrypted text" << endl << outputString << endl;
+	
+	cout << endl << "Your decrypted text" << endl << decrypt_caesar(outputString, encryptValue) << endl;
 	
 	return 0;
 }
